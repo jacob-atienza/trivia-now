@@ -1,9 +1,18 @@
+/*
+ * File: Category.tsx
+ * Programmer: Jacob Atienza
+ * Date: 2/27/2025
+ * Description: Contains the Category component for the trivia app.
+ */
 import { Select } from "@headlessui/react";
-import { fetchCategories, Category } from "../api/apiCalls";
+import { fetchCategories, ICategory } from "../api/apiCalls";
 import { useState, useEffect } from "react";
-
-const Options = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
+/*
+ * Function: Category
+ * Description: This function returns the category selection dropdown
+ */
+const Category = () => {
+  const [categories, setCategories] = useState<ICategory[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -21,10 +30,13 @@ const Options = () => {
     loadCategories();
   }, []);
   return (
-    <section className="flex h-screen flex-col items-center justify-center">
+    <section className="flex flex-col items-center justify-center">
+      <label className="text-headline mb-3 text-lg font-semibold sm:text-xl md:text-2xl">
+        Category
+      </label>
       <Select
         name="category"
-        className="sm:text-md mx-auto rounded-md border p-2 text-sm md:text-lg lg:text-xl xl:text-2xl"
+        className="text-paragraph bg-btn-text border-btn md:text-md mx-auto rounded-md border p-2 text-xs sm:text-sm lg:text-lg xl:text-xl"
         aria-label="Category"
       >
         <option value="">Any Category</option>
@@ -42,4 +54,4 @@ const Options = () => {
   );
 };
 
-export default Options;
+export default Category;

@@ -1,12 +1,22 @@
-import { useState } from "react";
+/*
+ * File: App.tsx
+ * Programmer: Jacob Atienza
+ * Date: 2/27/2025
+ * Description:
+ * App component where all components get called.
+ */
 import "./index.css";
-import Options from "./components/Options";
+import Category from "./components/Category";
 import Header from "./components/Header";
+import Difficulty from "./components/Difficulty";
 function App() {
   return (
     <>
       <Header />
-      <Options />
+      <section className="flex flex-col">
+        <Category />
+        <Difficulty />
+      </section>
     </>
   );
 }

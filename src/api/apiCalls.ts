@@ -17,7 +17,7 @@ export interface TriviaQuestion {
   incorrectAnswer: string[];
 }
 
-export interface Category {
+export interface ICategory {
   id: number;
   name: string;
 }
