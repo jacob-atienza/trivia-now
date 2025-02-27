@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display:
+    "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --color-lavender-100: #f3f4f6;
+  --color-lavender-200: #e5e7eb;
+  --color-lavender-300: #d1d5db;
+  --color-lavender-400: #9f7aea;
+  --color-lavender-500: #6b46c1;
+  --color-lavender-600: #553c9a;
+  --color-lavender-700: #44337a;
+  --color-lavender-800: #322659;
+  --color-lavender-900: #1f1531;
+
+  --ease-fluid: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+}
