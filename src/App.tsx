@@ -1,10 +1,3 @@
-/*
- * File: App.tsx
- * Programmer: Jacob Atienza
- * Date: 2/27/2025
- * Description:
- * App component where all components get called.
- */
 import "./index.css";
 import Category from "./components/Category";
 import Header from "./components/Header";
@@ -12,6 +5,7 @@ import Difficulty from "./components/Difficulty";
 import Type from "./components/Type";
 import Submit from "./components/Submit";
 import Questions from "./components/Questions";
+import Footer from "./components/Footer";
 import { useState, useEffect } from "react";
 import { getSessionToken, ICategory, TriviaQuestion } from "./api/apiCalls";
 
@@ -31,43 +25,26 @@ function App() {
     fetchToken();
   }, []);
 
-  /*
-   * Function: handleDifficultyChange
-   * Description: Handles the change in difficulty
-   * Parameters:
-   *   callbackDifficulty: string - Difficulty level of the trivia questions.
-   */
   const handleDifficultyChange = (callbackDifficulty: string) => {
     setDifficulty(callbackDifficulty);
     console.log(callbackDifficulty);
   };
 
-  /*
-   * Function: handleCategoryChange
-   * Description: Handles the change in category
-   * Parameters:
-   *   callbackCategory: ICategory - Category ID for the trivia questions.
-   */
   const handleCategoryChange = (callbackCategory: ICategory | null) => {
     setCategory(callbackCategory);
     console.log(callbackCategory);
   };
-  /*
-   * Function: handleTypeChange
-   * Description: Handles the change in type
-   * Parameters:
-   *   callbackType: string - type of questions
-   */
+
   const handleTypeChange = (callbackType: string) => {
     setType(callbackType);
     console.log(callbackType);
   };
 
   return (
-    <div className="h-full w-full">
-      <div className="bg-card-background/30 m-10 mx-auto max-w-2xl rounded-2xl p-4 backdrop-blur-xl">
+    <div className="flex min-h-screen flex-col">
+      <div className="bg-card-background/30 mx-auto my-10 w-full max-w-screen-lg flex-1 rounded-2xl p-2 backdrop-blur-xl sm:max-w-screen-md md:max-w-2xl">
         <Header />
-        <section className="container mx-auto flex max-w-lg flex-col px-4 sm:max-w-xl md:max-w-2xl lg:max-w-4xl">
+        <section className="container mx-auto flex flex-col px-4">
           {questions.length > 0 && (
             <Questions
               questions={questions}
@@ -91,6 +68,7 @@ function App() {
           />
         </section>
       </div>
+      <Footer />
     </div>
   );
 }
