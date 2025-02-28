@@ -1,10 +1,10 @@
+/* eslint-disable react/react-in-jsx-scope */
 /*
  * File: Footer.tsx
  * Programmer: Jacob Atienza
  * Date: 2/28/2025
  * Description: Footer at the bottom of the project
  */
-import React from "react";
 
 const Footer = () => {
   return (
