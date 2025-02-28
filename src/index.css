@@ -1,12 +1,28 @@
 @import "tailwindcss";
 
+@plugin "@tailwindcss/forms";
+
 @theme {
   --font-display: "Poppins";
-  --color-background: #004643;
-  --color-headline: #fffffe;
-  --color-paragraph: #abd1c6;
-  --color-btn: #f9bc60;
-  --color-btn-text: #001e1d;
+  --color-background: #f5f5f5; /* Light gray background */
+  --color-headline: #333333; /* Dark gray headline */
+  --color-subheadline: #ffffee; /* Medium gray subheadline */
+  --color-card-background: #ffffff; /* White card background */
+  --color-card-heading: #fffffe; /* Dark gray card heading */
+  --color-card-paragraph: #eeeeee; /* Medium gray card paragraph */
+  --color-paragraph: #666666; /* Medium gray paragraph */
+  --color-btn: #fbcd3f; /* Yellow button */
+  --color-btn-text: #ffffff; /* White button text */
+  --color-border: #dddddd; /* Light gray border */
   --ease-fluid: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
