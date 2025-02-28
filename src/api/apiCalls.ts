@@ -13,8 +13,9 @@ import axiosInstance from "./axiosInstance";
 
 export interface TriviaQuestion {
   question: string;
-  correctAnswer: string;
-  incorrectAnswer: string[];
+  correct_answer: string;
+  incorrect_answers: string[];
+  type: "multiple" | "boolean";
 }
 
 export interface ICategory {
@@ -65,24 +66,29 @@ export const fetchCategories = async (): Promise<ICategory[]> => {
  */
 export const getTriviaQuestions = async (
   token: string,
-  catagoryId?: number,
+  categoryId?: number,
   difficulty?: string,
   type?: string,
 ): Promise<TriviaQuestion[]> => {
   try {
-    const params: any = {
+    const params: {
+      token: string;
+      category?: string;
+      difficulty?: string;
+      type?: string;
+    } = {
       token,
     };
-    if (catagoryId) {
-      params.category = "&category=" + catagoryId;
+    console.log(categoryId, difficulty, type);
+    if (categoryId) {
+      params.category = categoryId.toString();
     }
     if (difficulty) {
-      params.difficulty = "&difficulty=" + difficulty;
+      params.difficulty = difficulty;
     }
     if (type) {
-      params.type = "&type=" + type;
+      params.type = type;
     }
-
     const response = await axiosInstance.get("api.php?amount=10", {
       params,
     });

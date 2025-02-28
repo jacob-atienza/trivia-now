@@ -11,6 +11,7 @@ import {
   getTriviaQuestions,
   getSessionToken,
   ICategory,
+  TriviaQuestion,
 } from "../api/apiCalls";
 import { useState } from "react";
 
@@ -18,12 +19,18 @@ interface SubmitProps {
   category?: ICategory | null;
   difficulty?: string;
   type?: string;
+  setQuestions: (questions: TriviaQuestion[]) => void;
 }
 /*
  * Component: Submit
  * Description: Handles Submission logic and displays a button on the configurations card.
  */
-const Submit: React.FC<SubmitProps> = ({ category, difficulty, type }) => {
+const Submit: React.FC<SubmitProps> = ({
+  category,
+  difficulty,
+  type,
+  setQuestions,
+}) => {
   const [token, setToken] = useState("");
   /*
    * Function: handleSubmit
@@ -31,7 +38,6 @@ const Submit: React.FC<SubmitProps> = ({ category, difficulty, type }) => {
    * If it hasn't, it creates one and holds it in the token state.
    */
   const handleSubmit = async () => {
-    console.log("I have been clicked");
     let newToken = token;
     if (!newToken) {
       newToken = await getSessionToken();
@@ -46,24 +52,26 @@ const Submit: React.FC<SubmitProps> = ({ category, difficulty, type }) => {
     } = { token: newToken };
 
     if (category) {
-      console.log("Category:", category);
       params.category = category.id;
     }
 
     if (difficulty) {
-      console.log("Difficulty:", difficulty);
       params.difficulty = difficulty;
     }
-    console.log(type);
+
     if (type) {
-      console.log("Type:", type);
       params.type = type;
     }
 
-    const queryString = new URLSearchParams(params as any).toString();
-    console.log("Final Params:", params);
-    console.log("Query String:", queryString);
-    //await getTriviaQuestions(queryString);
+    const fetchedQuestions = await getTriviaQuestions(
+      newToken,
+      category?.id,
+      difficulty,
+      type,
+    );
+
+    console.log(fetchedQuestions);
+    setQuestions(fetchedQuestions);
   };
 
   return (

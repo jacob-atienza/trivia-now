@@ -11,13 +11,15 @@ import Header from "./components/Header";
 import Difficulty from "./components/Difficulty";
 import Type from "./components/Type";
 import Submit from "./components/Submit";
+import Questions from "./components/Questions";
 import { useState } from "react";
-import { ICategory } from "./api/apiCalls";
+import { ICategory, TriviaQuestion } from "./api/apiCalls";
 
 function App() {
   const [difficulty, setDifficulty] = useState("");
   const [category, setCategory] = useState<ICategory | null>(null);
   const [type, setType] = useState("");
+  const [questions, setQuestions] = useState<TriviaQuestion[]>([]);
 
   /*
    * Function: handleDifficultyChange
@@ -53,13 +55,19 @@ function App() {
 
   return (
     <div className="h-full w-full">
-      <div className="bg-card-background/30 m-10 mx-auto max-w-2xl rounded-2xl p-4 backdrop-blur-lg">
+      <div className="bg-card-background/30 m-10 mx-auto max-w-2xl rounded-2xl p-4 backdrop-blur-xl">
         <Header />
         <section className="container mx-auto flex max-w-lg flex-col px-4 sm:max-w-xl md:max-w-2xl lg:max-w-4xl">
+          {questions.length > 0 && <Questions questions={questions} />}
           <Category handleCategoryChange={handleCategoryChange} />
           <Difficulty handleDifficultyChange={handleDifficultyChange} />
           <Type handleTypeChange={handleTypeChange} />
-          <Submit category={category} difficulty={difficulty} type={type} />
+          <Submit
+            category={category}
+            difficulty={difficulty}
+            type={type}
+            setQuestions={setQuestions}
+          />
         </section>
       </div>
     </div>
