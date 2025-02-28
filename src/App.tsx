@@ -12,14 +12,24 @@ import Difficulty from "./components/Difficulty";
 import Type from "./components/Type";
 import Submit from "./components/Submit";
 import Questions from "./components/Questions";
-import { useState } from "react";
-import { ICategory, TriviaQuestion } from "./api/apiCalls";
+import { useState, useEffect } from "react";
+import { getSessionToken, ICategory, TriviaQuestion } from "./api/apiCalls";
 
 function App() {
   const [difficulty, setDifficulty] = useState("");
   const [category, setCategory] = useState<ICategory | null>(null);
   const [type, setType] = useState("");
   const [questions, setQuestions] = useState<TriviaQuestion[]>([]);
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      const newToken = await getSessionToken();
+      console.log("Fetched Token:", newToken);
+      setToken(newToken);
+    };
+    fetchToken();
+  }, []);
 
   /*
    * Function: handleDifficultyChange
@@ -58,7 +68,17 @@ function App() {
       <div className="bg-card-background/30 m-10 mx-auto max-w-2xl rounded-2xl p-4 backdrop-blur-xl">
         <Header />
         <section className="container mx-auto flex max-w-lg flex-col px-4 sm:max-w-xl md:max-w-2xl lg:max-w-4xl">
-          {questions.length > 0 && <Questions questions={questions} />}
+          {questions.length > 0 && (
+            <Questions
+              questions={questions}
+              setQuestions={setQuestions}
+              token={token}
+              category={category}
+              difficulty={difficulty}
+              type={type}
+            />
+          )}
+
           <Category handleCategoryChange={handleCategoryChange} />
           <Difficulty handleDifficultyChange={handleDifficultyChange} />
           <Type handleTypeChange={handleTypeChange} />
@@ -67,6 +87,7 @@ function App() {
             difficulty={difficulty}
             type={type}
             setQuestions={setQuestions}
+            token={token}
           />
         </section>
       </div>

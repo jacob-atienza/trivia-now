@@ -1,140 +1,96 @@
-import React, { useState } from "react";
-import { TriviaQuestion } from "../api/apiCalls";
+import React, { useState, useMemo } from "react";
+import { getTriviaQuestions, TriviaQuestion, ICategory } from "../api/apiCalls";
 
 interface QuestionsProps {
   questions: TriviaQuestion[];
+  setQuestions: (newQuestions: TriviaQuestion[]) => void;
+  token: string;
+  category?: ICategory | null;
+  difficulty?: string;
+  type?: string;
 }
 
-const Questions: React.FC<QuestionsProps> = ({ questions }) => {
+const Questions: React.FC<QuestionsProps> = ({
+  questions,
+  setQuestions,
+  token,
+  category,
+  difficulty,
+  type,
+}) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
-  const [isCorrect, setIsCorrect] = useState(false);
 
   const question = questions[currentQuestionIndex];
 
-  // Helper function to decode HTML
   const decodeHtmlEntities = (text: string) => {
     const doc = new DOMParser().parseFromString(text, "text/html");
     return doc.documentElement.textContent || text;
   };
 
-  // Ensure the options are randomized for multiple-choice
-  const options = [...question.incorrect_answers, question.correct_answer];
-  options.sort(() => Math.random() - 0.5);
+  const shuffledOptions = useMemo(() => {
+    const allOptions = [...question.incorrect_answers, question.correct_answer];
+    return allOptions.sort(() => Math.random() - 0.5);
+  }, [question]);
 
   const handleAnswerSelect = (answer: string) => {
     setSelectedAnswer(answer);
     setIsAnswered(true);
-    setIsCorrect(answer === question.correct_answer);
   };
 
-  const handleNextQuestion = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedAnswer(null);
-      setIsAnswered(false);
+  const handleNextQuestion = async () => {
+    if (currentQuestionIndex === 9) {
+      // Fetch new questions using previous parameters
+      const newQuestions = await getTriviaQuestions(
+        token,
+        category?.id,
+        difficulty,
+        type,
+      );
+      setQuestions(newQuestions);
+      setCurrentQuestionIndex(0);
+    } else {
+      setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
     }
+    setSelectedAnswer(null);
+    setIsAnswered(false);
   };
 
   return (
-    <div className="container mx-auto p-4">
-      {question && (
-        <div className="mx-auto max-w-xl rounded-lg bg-white p-6 shadow-lg">
-          <h2 className="mb-4 text-center text-2xl font-semibold text-gray-800">
-            {decodeHtmlEntities(question.question)} {/* Decode question here */}
-          </h2>
-
-          {/* Render different options based on the question type */}
-          <div className="space-y-4">
-            {question.type === "multiple" && (
-              <div className="space-y-2">
-                {options.map((option, index) => (
-                  <div key={index} className="flex items-center space-x-2">
-                    <input
-                      type="radio"
-                      id={`option-${index}`}
-                      name="question-option"
-                      value={option}
-                      className="h-5 w-5 text-yellow-400"
-                      checked={selectedAnswer === option}
-                      onChange={() => handleAnswerSelect(option)}
-                      disabled={isAnswered} // Disable options after answering
-                    />
-                    <label
-                      htmlFor={`option-${index}`}
-                      className={`text-gray-700 ${isAnswered && option === question.correct_answer ? "text-green-500" : ""}`}
-                    >
-                      {decodeHtmlEntities(option)} {/* Decode option text */}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {question.type === "boolean" && (
-              <div className="space-x-4">
-                <div className="inline-flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    id="true-option"
-                    name="question-option"
-                    value="True"
-                    className="h-5 w-5 text-yellow-400"
-                    checked={selectedAnswer === "True"}
-                    onChange={() => handleAnswerSelect("True")}
-                    disabled={isAnswered} // Disable options after answering
-                  />
-                  <label htmlFor="true-option" className="text-gray-700">
-                    True
-                  </label>
-                </div>
-                <div className="inline-flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    id="false-option"
-                    name="question-option"
-                    value="False"
-                    className="h-5 w-5 text-yellow-400"
-                    checked={selectedAnswer === "False"}
-                    onChange={() => handleAnswerSelect("False")}
-                    disabled={isAnswered} // Disable options after answering
-                  />
-                  <label htmlFor="false-option" className="text-gray-700">
-                    False
-                  </label>
-                </div>
-              </div>
-            )}
-
-            {isAnswered && (
-              <div className="mt-4">
-                <p
-                  className={`text-xl font-semibold ${isCorrect ? "text-green-500" : "text-red-500"}`}
-                >
-                  {isCorrect ? "Correct!" : "Wrong!"}
-                </p>
-                {!isCorrect && (
-                  <p className="mt-2 text-lg text-gray-700">
-                    The correct answer was:{" "}
-                    {decodeHtmlEntities(question.correct_answer)}
-                  </p>
-                )}
-              </div>
-            )}
-          </div>
-
-          <div className="mt-4 flex justify-center">
-            <button
-              onClick={handleNextQuestion}
-              className="rounded-lg bg-yellow-400 px-4 py-2 text-white transition duration-200 hover:bg-yellow-500"
-              disabled={!isAnswered} // Disable Next Question button until answered
-            >
-              Next Question
-            </button>
-          </div>
-        </div>
-      )}
+    <div className="container mx-auto max-w-lg rounded-lg bg-white/10 p-6 shadow-xl backdrop-blur-xl">
+      <h2 className="text-xl font-semibold text-white sm:text-2xl">
+        {decodeHtmlEntities(question.question)}
+      </h2>
+      <div className="mt-4 flex flex-col gap-2">
+        {shuffledOptions.map((option) => (
+          <button
+            key={option}
+            value={option}
+            aria-pressed={selectedAnswer === option}
+            className={`rounded-md p-3 text-lg transition ${
+              selectedAnswer
+                ? option === question.correct_answer
+                  ? "bg-green-500/70 text-white"
+                  : "bg-red-500/70 text-white"
+                : "bg-gray-200 hover:bg-gray-300"
+            }`}
+            onClick={() => handleAnswerSelect(option)}
+            disabled={isAnswered}
+          >
+            {decodeHtmlEntities(option)}
+          </button>
+        ))}
+      </div>
+      <div className="mt-6 flex justify-center">
+        <button
+          onClick={handleNextQuestion}
+          className="rounded-lg bg-yellow-500 px-6 py-2 text-lg font-bold text-white transition hover:bg-yellow-600 disabled:opacity-50"
+          disabled={!isAnswered}
+        >
+          {currentQuestionIndex === 9 ? "Get More Questions" : "Next Question"}
+        </button>
+      </div>
     </div>
   );
 };
