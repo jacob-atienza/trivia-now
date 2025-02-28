@@ -8,6 +8,7 @@ interface QuestionsProps {
 const Questions: React.FC<QuestionsProps> = ({ questions }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [isAnswered, setIsAnswered] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
 
   const question = questions[currentQuestionIndex];
