@@ -1,3 +1,8 @@
+/*
+ * File: Questions.tsx
+ * Programmer: Jacob Atienza
+ * Description: Contains the logic for displaying the questions as well as the results of the answered questions.
+ */
 import React, { useState, useMemo } from "react";
 import { getTriviaQuestions, TriviaQuestion, ICategory } from "../api/apiCalls";
 
@@ -78,6 +83,11 @@ const Questions: React.FC<QuestionsProps> = ({
             onClick={() => handleAnswerSelect(option)}
             disabled={isAnswered}
           >
+            {selectedAnswer === question.correct_answer ? (
+              <div>Correct!</div>
+            ) : (
+              <div>Wrong!</div>
+            )}
             {decodeHtmlEntities(option)}
           </button>
         ))}

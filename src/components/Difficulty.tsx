@@ -1,3 +1,4 @@
+/* eslint-disable react/react-in-jsx-scope */
 /*
  * File: Difficulty.tsx
  * Programmer: Jacob Atienza

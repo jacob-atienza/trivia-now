@@ -8,6 +8,7 @@ import Questions from "./components/Questions";
 import Footer from "./components/Footer";
 import { useState, useEffect } from "react";
 import { getSessionToken, ICategory, TriviaQuestion } from "./api/apiCalls";
+import { Analytics } from "@vercel/analytics/react";
 
 function App() {
   const [difficulty, setDifficulty] = useState("");
@@ -43,6 +44,7 @@ function App() {
   return (
     <div className="flex min-h-screen flex-col">
       <div className="bg-card-background/30 mx-auto my-10 w-full max-w-screen-lg flex-1 rounded-2xl p-2 backdrop-blur-xl sm:max-w-screen-md md:max-w-2xl">
+        <Analytics />
         <Header />
         <section className="container mx-auto flex flex-col px-4">
           {questions.length > 0 && (
